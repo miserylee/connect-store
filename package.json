@@ -1,0 +1,11 @@
+{
+  "name": "connect-store",
+  "version": "1.0.0-alpha",
+  "description": "Connect react view to store",
+  "main": "index.js",
+  "license": "MIT",
+  "author": "Misery Lee <miserylee@foxmail.com>",
+  "repository": {
+    "url": "https://github.com/miserylee/connect-store"
+  }
+}
