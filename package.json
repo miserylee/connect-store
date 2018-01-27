@@ -1,6 +1,6 @@
 {
   "name": "connect-store",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Connect react view to store",
   "main": "index.js",
   "license": "MIT",
@@ -29,6 +29,7 @@
   },
   "scripts": {
     "build": "babel src -d lib",
-    "start:example": "webpack-dev-server --config ./example/webpack.config.js"
+    "start:example": "webpack-dev-server --config ./example/webpack.config.js",
+    "prepublish": "npm run build"
   }
 }
