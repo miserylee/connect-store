@@ -1,6 +1,6 @@
 {
   "name": "connect-store",
-  "version": "1.0.3-alpha",
+  "version": "1.1.1",
   "description": "Connect react view to store",
   "main": "index.js",
   "license": "MIT",
