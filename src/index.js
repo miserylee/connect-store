@@ -13,13 +13,13 @@ function getMethods (store) {
 
 export default class Connector extends PureComponent {
 
+  static defaultProps = {
+    store: [],
+    View: null,
+  };
+
   constructor (props) {
     super(props);
-
-    let { store } = props;
-    if (!Array.isArray(store)) {
-      store = [store];
-    }
 
     // Start sync queue
     this._syncQueue = [];
@@ -33,9 +33,39 @@ export default class Connector extends PureComponent {
         this._syncQueue.splice(0);
       }
     });
+  }
 
+  componentWillMount () {
+    this.init(this.props.store);
+  }
+
+  componentWillUpdate (nextProps) {
+    if (nextProps.store !== this.props.store) {
+      this.init(nextProps.store, this.props.store);
+    }
+  }
+
+  init (store = [], prevStore = []) {
+    if (!Array.isArray(store)) {
+      store = [store];
+    }
+    if (!Array.isArray(prevStore)) {
+      prevStore = [prevStore];
+    }
+
+    this._actions = {};
+
+    // Unbind previous stores
+    prevStore.forEach(this.unbindStore.bind(this));
     // Bind stores
     store.forEach(this.bindStore.bind(this));
+  }
+
+  unbindStore (store) {
+    // Unbind sync queue
+    if (store._syncQueues && store._syncQueues.length > 0) {
+      store._syncQueues.splice(store._syncQueues.indexOf(this._syncQueue), 1);
+    }
   }
 
   bindStore (store) {
@@ -52,29 +82,28 @@ export default class Connector extends PureComponent {
       state[key] = store[key];
       store[privateKey] = store[key];
 
-      const setter = store.__lookupSetter__(key);
-      properties[key] = {
-        set (value) {
-          setter && setter.bind(this)(value);
-          this[privateKey] = value;
-          const setState = {
-            [key]: value,
-          };
-          this._syncQueues.forEach(syncQueue => syncQueue.push(setState));
-        },
-        get () {
-          return this[privateKey];
-        },
-      };
+      if (!store._definedProperties) {
+        const setter = store.__lookupSetter__(key);
+        properties[key] = {
+          set (value) {
+            setter && setter.bind(this)(value);
+            this[privateKey] = value;
+            const setState = {
+              [key]: value,
+            };
+            this._syncQueues.forEach(syncQueue => syncQueue.push(setState));
+          },
+          get () {
+            return this[privateKey];
+          },
+        };
+      }
 
       return { state, properties };
     }, { state: {}, properties: {} });
 
     // Initialize state
-    this.state = {
-      ...this.state,
-      ...state,
-    };
+    this._syncQueue.push(state);
 
     // Transform actions
     this.actions = {
@@ -89,7 +118,10 @@ export default class Connector extends PureComponent {
     };
 
     // Define getters/setters
-    Object.defineProperties(store, properties);
+    if (!store._definedProperties) {
+      Object.defineProperties(store, properties);
+      store._definedProperties = true;
+    }
   }
 
   componentWillUnmount () {
@@ -98,6 +130,7 @@ export default class Connector extends PureComponent {
 
   render () {
     const { View, store, ...rest } = this.props;
+    if (!View || !store || !this.state) return null;
     return (
       <View
         {...rest}
