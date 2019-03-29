@@ -1,0 +1,33 @@
+{
+  "name": "connect-store-2",
+  "main": "./build/index.js",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf ./build",
+    "start": "node ./build/index",
+    "start-ts": "ts-node ./src/index",
+    "lint": "tslint -c tslint.json ./src/**/*.ts",
+    "prebuild": "yarn run lint && yarn test && yarn run clean",
+    "prepublishOnly": "yarn build",
+    "test": "mocha --require ts-node/register ./test/*.spec.ts"
+  },
+  "version": "0.0.1",
+  "private": false,
+  "license": "MIT",
+  "author": "MiseryLee <miserylee@foxmail.com>",
+  "description": "Easily manage stores of React views.",
+  "typings": "./build/index.d.ts",
+  "pre-commit": [
+    "prepublishOnly"
+  ],
+  "devDependencies": {
+    "@types/mocha": "5.2.6",
+    "@types/node": "11.12.0",
+    "mocha": "6.0.2",
+    "pre-commit": "1.2.2",
+    "ts-node": "8.0.3",
+    "tslint": "5.14.0",
+    "tslint-clean-code": "0.2.9",
+    "typescript": "3.3.4000"
+  }
+}
