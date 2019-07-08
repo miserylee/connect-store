@@ -11,7 +11,7 @@
     "prepublishOnly": "yarn build",
     "start:example": "yarn build && webpack-dev-server --config ./example/webpack.config.js"
   },
-  "version": "2.0.7",
+  "version": "2.0.8",
   "private": false,
   "license": "MIT",
   "author": "MiseryLee <miserylee@foxmail.com>",
