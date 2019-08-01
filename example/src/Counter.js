@@ -3,38 +3,38 @@ import React from 'react';
 class CounterStore {
   count = 0;
 
-  constructor (base = 0) {
+  constructor(base = 0) {
     this.count = base;
-    setInterval(this.inc.bind(this), 1000);
+    // setInterval(this.inc.bind(this), 1000);
   }
 
-  inc () {
-    this.count += 1;
+  inc() {
+    setImmediate(() => {
+      this.count += 1;
+      this.count += 1;
+    });
   }
 
-  dec () {
+  dec() {
     this.count -= 1;
   }
 
-  incAsync () {
+  incAsync() {
     setTimeout(_ => {
       this.count += 1;
     }, 1000);
   }
 }
 
-const CounterView = ({ label, count, onInc, onDec, onIncAsync, newItemText, onUpdateNewItemText, onAdd }) => {
+const CounterView = ({ label, dataSource, delegate }) => {
+  console.log('render');
   return (
     <div>
       <span>{label}:</span>
-      <button onClick={onDec}>-</button>
-      <span>{count}</span>
-      <button onClick={onInc}>+</button>
-      <button onClick={onIncAsync}>...+</button>
-      <div>
-        <input value={newItemText} onChange={e => onUpdateNewItemText(e.target.value)}/>
-        <button onClick={onAdd}>+</button>
-      </div>
+      <button onClick={delegate.dec}>-</button>
+      <span>{dataSource.count}</span>
+      <button onClick={delegate.inc}>+</button>
+      <button onClick={delegate.incAsync}>...+</button>
     </div>
   );
 };

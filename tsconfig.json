@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2017",
+    "target": "es5",
     "lib": ["es2017"],
     "module": "commonjs",
     "declaration": true,
@@ -13,9 +13,10 @@
     "strictNullChecks": true,
     "alwaysStrict": true,
     "moduleResolution": "node",
-    "outDir": "build"
+    "outDir": "build",
+    "jsx": "react"
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*.tsx"
   ]
 }
